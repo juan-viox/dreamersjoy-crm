@@ -1,8 +1,15 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-/** Paths that never require authentication */
+/** Paths that never require authentication (browser + API). */
 const publicPaths = ['/login', '/signup', '/auth/callback', '/portal-login']
+
+/**
+ * API routes that authenticate themselves via `x-api-key` header instead of
+ * Supabase session cookies. Anything outside this list under /api/* requires
+ * a valid Supabase session.
+ */
+const apiKeyAuthedPrefixes = ['/api/v1/ingest']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -12,17 +19,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request })
   }
 
-  // ── 2. Always allow ingest API routes (API-key auth in route handlers) ──
-  if (pathname.startsWith('/api/v1/ingest')) {
+  // ── 2. API routes that use x-api-key auth (handler enforces the check) ──
+  if (apiKeyAuthedPrefixes.some((p) => pathname.startsWith(p))) {
     return NextResponse.next()
   }
 
-  // ── 3. Always allow public API routes ──
-  if (pathname.startsWith('/api/')) {
-    return NextResponse.next()
-  }
-
-  // ── 4. Create Supabase client that handles cookie refresh ──
+  // ── 3. Create Supabase client (handles cookie refresh) ──
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -50,6 +52,17 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // ── 4. Authenticated API routes: return 401 JSON instead of redirect HTML ──
+  if (pathname.startsWith('/api/')) {
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+    return supabaseResponse
+  }
+
   // ── 5. Portal routes: require auth, redirect to portal-login ──
   if (pathname.startsWith('/portal')) {
     if (!user) {
@@ -60,7 +73,7 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse
   }
 
-  // ── 6. All other routes: require auth ──
+  // ── 6. All other routes: require auth, redirect to /login ──
   if (!user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { Plus, FileText, Search, DollarSign, Clock, CheckCircle, AlertTriangle } from 'lucide-react'
+import { Plus, FileText, Search, Clock, CheckCircle, AlertTriangle } from 'lucide-react'
 import EmptyState from '@/components/shared/EmptyState'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Invoice } from '@/types'
@@ -24,6 +24,7 @@ export default function InvoicesPage() {
   const supabase = createClient()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability, react-hooks/set-state-in-effect -- mount data fetch; loadInvoices is defined below and sets state once loaded
     loadInvoices()
   }, [])
 

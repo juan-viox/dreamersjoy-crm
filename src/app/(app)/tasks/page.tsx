@@ -12,8 +12,6 @@ import {
   Filter,
   X,
   Loader2,
-  ArrowUpDown,
-  ChevronDown,
 } from 'lucide-react'
 
 type ViewMode = 'list' | 'board'
@@ -68,6 +66,7 @@ export default function TasksPage() {
   }, [supabase])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount; sets state once tasks load
     loadTasks()
   }, [loadTasks])
 
@@ -163,7 +162,7 @@ export default function TasksPage() {
     return (t.metadata?.priority as TaskPriority) || 'medium'
   }
 
-  let filtered = tasks.filter((t) => {
+  const filtered = tasks.filter((t) => {
     if (statusFilter !== 'all' && getTaskStatus(t) !== statusFilter) return false
     if (priorityFilter !== 'all' && getTaskPriority(t) !== priorityFilter) return false
     return true

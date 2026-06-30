@@ -273,10 +273,8 @@ export default function ReportsClient({
     const monthMap: Record<string, number> = {}
     months.forEach((m) => (monthMap[m] = 0))
     filteredActivities.forEach((a) => {
-      const key = new Date(a.created_at).toLocaleString('en-US', { month: 'Short', year: '2-digit' })
-      // Fix: use same format
-      const key2 = new Date(a.created_at).toLocaleString('en-US', { month: 'short', year: '2-digit' })
-      if (monthMap[key2] !== undefined) monthMap[key2]++
+      const key = new Date(a.created_at).toLocaleString('en-US', { month: 'short', year: '2-digit' })
+      if (monthMap[key] !== undefined) monthMap[key]++
     })
     return months.map((m) => ({ month: m, activities: monthMap[m] }))
   }, [filteredActivities, filterDate])
@@ -432,7 +430,7 @@ export default function ReportsClient({
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="month" stroke="var(--muted)" fontSize={11} tickLine={false} axisLine={false} />
               <YAxis stroke="var(--muted)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
-              <Tooltip {...tooltipStyle} formatter={(v: number) => [formatCurrency(v), 'Revenue']} />
+              <Tooltip {...tooltipStyle} formatter={(v) => [formatCurrency(Number(v)), 'Revenue']} />
               <Area type="monotone" dataKey="revenue" stroke="#6c5ce7" strokeWidth={2} fill="url(#revGrad)" />
             </AreaChart>
           </ResponsiveContainer>
@@ -446,9 +444,9 @@ export default function ReportsClient({
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis type="number" stroke="var(--muted)" fontSize={11} tickLine={false} axisLine={false} />
               <YAxis type="category" dataKey="name" stroke="var(--muted)" fontSize={11} tickLine={false} axisLine={false} width={100} />
-              <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => {
-                if (name === 'count') return [v, 'Deals']
-                return [formatCurrency(v), 'Value']
+              <Tooltip {...tooltipStyle} formatter={(v, name) => {
+                if (name === 'count') return [Number(v), 'Deals']
+                return [formatCurrency(Number(v)), 'Value']
               }} />
               <Bar dataKey="count" radius={[0, 4, 4, 0]}>
                 {dealsByStage.map((entry, i) => (
@@ -670,7 +668,7 @@ export default function ReportsClient({
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="name" stroke="var(--muted)" fontSize={11} tickLine={false} axisLine={false} />
               <YAxis stroke="var(--muted)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
-              <Tooltip {...tooltipStyle} formatter={(v: number) => [formatCurrency(v), 'Value']} />
+              <Tooltip {...tooltipStyle} formatter={(v) => [formatCurrency(Number(v)), 'Value']} />
               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                 {pipelineValue.map((entry, i) => (
                   <Cell key={i} fill={entry.color || COLORS[i % COLORS.length]} />

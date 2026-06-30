@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  Users,
   Search,
   Filter,
   Loader2,
@@ -26,6 +25,17 @@ interface UserRow {
 interface OrgOption {
   id: string
   name: string
+}
+
+interface ProfileWithOrg {
+  id: string
+  full_name: string | null
+  email: string | null
+  role: string | null
+  created_at: string
+  last_sign_in_at: string | null
+  organization_id: string
+  organization?: { name: string | null } | null
 }
 
 export default function AdminUsersPage() {
@@ -54,7 +64,7 @@ export default function AdminUsersPage() {
 
       if (profiles) {
         setUsers(
-          profiles.map((p: any) => ({
+          (profiles as unknown as ProfileWithOrg[]).map((p) => ({
             id: p.id,
             full_name: p.full_name,
             email: p.email,

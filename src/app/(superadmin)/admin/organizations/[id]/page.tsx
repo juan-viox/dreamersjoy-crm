@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -44,6 +44,27 @@ interface Profile {
   role: string | null
   created_at: string
   last_sign_in_at: string | null
+}
+
+interface BrandingState {
+  primary_color: string
+  secondary_color: string
+  accent_color: string
+  display_font: string
+  body_font: string
+  logo_url: string
+  tagline: string
+  website: string
+  phone: string
+  email: string
+}
+
+interface OrgSite {
+  id: string
+  name: string
+  domain: string | null
+  status: string | null
+  created_at: string
 }
 
 const tabs = [
@@ -100,11 +121,7 @@ export default function OrgDetailPage() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    loadOrg()
-  }, [id])
-
-  async function loadOrg() {
+  const loadOrg = useCallback(async () => {
     const { data } = await supabase
       .from('organizations')
       .select('*')
@@ -137,7 +154,12 @@ export default function OrgDetailPage() {
     if (profiles) setUsers(profiles)
 
     setLoading(false)
-  }
+  }, [id, supabase])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount / id change; sets state once org loads
+    loadOrg()
+  }, [loadOrg])
 
   async function saveBranding() {
     setSaving(true)
@@ -298,14 +320,14 @@ function BrandingTab({
   saveMessage,
   onSave,
 }: {
-  branding: Record<string, string>
-  setBranding: (b: Record<string, string>) => void
+  branding: BrandingState
+  setBranding: (b: BrandingState) => void
   orgName: string
   saving: boolean
   saveMessage: string
   onSave: () => void
 }) {
-  function update(key: string, value: string) {
+  function update(key: keyof BrandingState, value: string) {
     setBranding({ ...branding, [key]: value })
   }
 
@@ -470,6 +492,7 @@ function BrandingTab({
             style={{ background: '#FFFFFF', border: `1px solid ${branding.accent_color}20` }}
           >
             {branding.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={branding.logo_url}
                 alt="Logo"
@@ -625,23 +648,25 @@ function UsersTab({ users }: { users: Profile[] }) {
 
 /* ---------- Sites Tab ---------- */
 function SitesTab({ orgId }: { orgId: string }) {
-  const [sites, setSites] = useState<any[]>([])
+  const [sites, setSites] = useState<OrgSite[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  useEffect(() => {
-    async function load() {
-      const { data } = await supabase
-        .from('sites')
-        .select('*')
-        .eq('organization_id', orgId)
-        .order('created_at', { ascending: false })
+  const loadSites = useCallback(async () => {
+    const { data } = await supabase
+      .from('sites')
+      .select('*')
+      .eq('organization_id', orgId)
+      .order('created_at', { ascending: false })
 
-      if (data) setSites(data)
-      setLoading(false)
-    }
-    load()
-  }, [orgId])
+    if (data) setSites(data as unknown as OrgSite[])
+    setLoading(false)
+  }, [orgId, supabase])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount; sets state once sites load
+    loadSites()
+  }, [loadSites])
 
   if (loading) {
     return (

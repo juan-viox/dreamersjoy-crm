@@ -145,8 +145,8 @@ export async function POST(request: Request) {
           default:
             results.push({ action: action.type, status: 'skipped', error: 'Unknown action type' })
         }
-      } catch (err: any) {
-        results.push({ action: action.type, status: 'error', error: err.message })
+      } catch (err) {
+        results.push({ action: action.type, status: 'error', error: err instanceof Error ? err.message : String(err) })
       }
     }
 
@@ -160,7 +160,7 @@ export async function POST(request: Request) {
       .eq('id', workflowId)
 
     return NextResponse.json({ success: true, results })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 })
   }
 }

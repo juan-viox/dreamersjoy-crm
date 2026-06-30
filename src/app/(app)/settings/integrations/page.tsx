@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Key, Eye, EyeOff, Check, ExternalLink, Plug } from 'lucide-react'
+import { Eye, EyeOff, ExternalLink } from 'lucide-react'
 
 interface Integration {
   id: string
@@ -72,6 +72,7 @@ export default function IntegrationsPage() {
 
   useEffect(() => {
     const stored = localStorage.getItem('viox-crm-integrations')
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate saved integration values from localStorage on mount (unavailable during SSR)
     if (stored) setValues(JSON.parse(stored))
   }, [])
 

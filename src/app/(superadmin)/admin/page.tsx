@@ -178,8 +178,8 @@ export default function SuperAdminOverview() {
                     borderRadius: '0.5rem',
                     color: 'var(--text)',
                   }}
-                  formatter={(value: number) => [
-                    `$${value.toLocaleString()}`,
+                  formatter={(value) => [
+                    `$${Number(value).toLocaleString()}`,
                     'Revenue',
                   ]}
                 />

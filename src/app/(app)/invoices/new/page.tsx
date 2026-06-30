@@ -39,6 +39,7 @@ export default function NewInvoicePage() {
   const router = useRouter()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability, react-hooks/set-state-in-effect -- mount data fetch; loadData is defined below and sets state once loaded
     loadData()
   }, [])
 

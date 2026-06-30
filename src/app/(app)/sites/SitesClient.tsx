@@ -33,11 +33,11 @@ export default function SitesClient({ sites }: { sites: CinematicSite[] }) {
             <span
               className="badge"
               style={{
-                background: site.active ? 'rgba(0,184,148,0.15)' : 'rgba(136,136,160,0.15)',
-                color: site.active ? 'var(--success)' : 'var(--muted)',
+                background: site.is_active ? 'rgba(0,184,148,0.15)' : 'rgba(136,136,160,0.15)',
+                color: site.is_active ? 'var(--success)' : 'var(--muted)',
               }}
             >
-              {site.active ? 'Active' : 'Inactive'}
+              {site.is_active ? 'Active' : 'Inactive'}
             </span>
           </div>
 

@@ -111,6 +111,7 @@ export default function CustomFieldsPage() {
   }, [activeTab, supabase])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount / tab change; sets state once fields load
     fetchFields()
   }, [fetchFields])
 

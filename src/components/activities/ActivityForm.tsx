@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, X } from 'lucide-react'
-import type { Contact, Deal } from '@/types'
+import type { Activity, Contact, Deal } from '@/types'
 
 export default function ActivityForm({
   onCreated,
   onCancel,
 }: {
-  onCreated: (activity: any) => void
+  onCreated: (activity: Activity) => void
   onCancel: () => void
 }) {
   const [type, setType] = useState('call')
@@ -61,7 +61,7 @@ export default function ActivityForm({
 
     if (insertError) { setError(insertError.message); setLoading(false); return }
 
-    onCreated(data)
+    onCreated(data as Activity)
   }
 
   return (

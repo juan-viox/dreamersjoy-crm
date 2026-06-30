@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import crmConfig from '@/crm.config'
 
+interface InvoiceLineItem {
+  description: string
+  quantity: number | string
+  unit_price: number | string
+  total: number | string
+}
+
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -28,7 +35,7 @@ export async function GET(
       .eq('invoice_id', id)
       .order('sort_order')
 
-    const lineItems = items ?? []
+    const lineItems = (items ?? []) as InvoiceLineItem[]
     const biz = crmConfig
     const branding = crmConfig.branding
 
@@ -37,7 +44,8 @@ export async function GET(
       : ''
     const contactEmail = invoice.contact?.email ?? ''
     const contactPhone = invoice.contact?.phone ?? ''
-    const contactCompany = (invoice.contact as any)?.company?.name ?? ''
+    const contactCompany =
+      (invoice.contact as { company?: { name?: string } | null } | null)?.company?.name ?? ''
 
     const formatMoney = (n: number) =>
       new Intl.NumberFormat('en-US', {
@@ -345,7 +353,7 @@ export async function GET(
     <tbody>
       ${lineItems
         .map(
-          (item: any, i: number) => `
+          (item: InvoiceLineItem, i: number) => `
         <tr>
           <td style="color:#999">${i + 1}</td>
           <td style="font-weight:500">${item.description}</td>
@@ -399,7 +407,7 @@ export async function GET(
         'Content-Type': 'text/html; charset=utf-8',
       },
     })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 })
   }
 }

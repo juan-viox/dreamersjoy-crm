@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { ArrowLeft, Upload, ArrowRight, CheckCircle, Loader2, FileSpreadsheet, AlertTriangle } from 'lucide-react'
@@ -41,7 +41,7 @@ const FIELD_MAPS: Record<EntityType, { label: string; value: string; required?: 
 export default function ImportPage() {
   const [step, setStep] = useState(1)
   const [entityType, setEntityType] = useState<EntityType>('contacts')
-  const [csvText, setCsvText] = useState('')
+  const [, setCsvText] = useState('')
   const [headers, setHeaders] = useState<string[]>([])
   const [rows, setRows] = useState<string[][]>([])
   const [mapping, setMapping] = useState<Record<string, string>>({})
@@ -161,7 +161,7 @@ export default function ImportPage() {
 
       const { error: insertError } = await supabase
         .from(entityType)
-        .insert(records as any[])
+        .insert(records as unknown as never[])
 
       if (insertError) {
         errors += batch.length

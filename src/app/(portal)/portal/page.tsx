@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import PortalNav from '@/components/portal/PortalNav'
@@ -45,7 +46,7 @@ export default function PortalDashboard() {
         .limit(1)
 
       if (contacts && contacts.length > 0) {
-        setContact(contacts[0])
+        setContact(contacts[0] as Contact)
 
         // Get deals linked to this contact
         const { data: deals } = await supabase
@@ -55,7 +56,7 @@ export default function PortalDashboard() {
           .order('created_at', { ascending: false })
           .limit(5)
 
-        if (deals) setUpcomingDeals(deals)
+        if (deals) setUpcomingDeals(deals as Deal[])
       }
 
       setLoading(false)
@@ -110,7 +111,7 @@ export default function PortalDashboard() {
         {/* Dashboard cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {/* Upcoming Workshops */}
-          <a
+          <Link
             href="/portal/bookings"
             className="portal-card no-underline group"
             style={{ display: 'block' }}
@@ -154,10 +155,10 @@ export default function PortalDashboard() {
               <span style={{ fontFamily: "'Jost', system-ui, sans-serif" }}>View bookings</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </div>
-          </a>
+          </Link>
 
           {/* Recent Photos */}
-          <a
+          <Link
             href="/portal/gallery"
             className="portal-card no-underline group"
             style={{ display: 'block' }}
@@ -200,10 +201,10 @@ export default function PortalDashboard() {
               <span style={{ fontFamily: "'Jost', system-ui, sans-serif" }}>View gallery</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </div>
-          </a>
+          </Link>
 
           {/* Account Info */}
-          <a
+          <Link
             href="/portal/profile"
             className="portal-card no-underline group"
             style={{ display: 'block' }}
@@ -246,7 +247,7 @@ export default function PortalDashboard() {
               <span style={{ fontFamily: "'Jost', system-ui, sans-serif" }}>Edit profile</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </div>
-          </a>
+          </Link>
         </div>
 
         {/* Recent bookings table */}

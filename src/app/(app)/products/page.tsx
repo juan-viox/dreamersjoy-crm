@@ -24,6 +24,7 @@ export default function ProductsPage() {
   const supabase = createClient()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability, react-hooks/set-state-in-effect -- mount data fetch; loadProducts is defined below and sets state once loaded
     loadProducts()
   }, [])
 
