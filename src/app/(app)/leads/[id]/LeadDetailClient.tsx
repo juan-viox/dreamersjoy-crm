@@ -22,6 +22,7 @@ import { createClient } from '@/lib/supabase/client'
 import Avatar from '@/components/shared/Avatar'
 import ContactTimeline from '@/components/contacts/ContactTimeline'
 import { formatDate } from '@/lib/utils'
+import type { Contact, Activity } from '@/types'
 
 export default function LeadDetailClient({
   contact,
@@ -30,8 +31,8 @@ export default function LeadDetailClient({
   firstStageId,
   firstStageName,
 }: {
-  contact: any
-  activities: any[]
+  contact: Contact
+  activities: Activity[]
   hasDeal: boolean
   firstStageId: string | null
   firstStageName: string | null

@@ -13,7 +13,7 @@ import {
   Briefcase,
   CheckCircle2,
   MessageSquare,
-  Activity,
+  Activity as ActivityIcon,
   FileText,
   Paperclip,
 } from 'lucide-react'
@@ -23,9 +23,10 @@ import FileAttachments from '@/components/shared/FileAttachments'
 import NotesPanel from '@/components/shared/NotesPanel'
 import CustomFieldsRenderer from '@/components/shared/CustomFieldsRenderer'
 import { formatDate, formatCurrency } from '@/lib/utils'
+import type { Contact, Activity, Deal } from '@/types'
 
 const tabs = [
-  { key: 'activity', label: 'Activity', icon: Activity },
+  { key: 'activity', label: 'Activity', icon: ActivityIcon },
   { key: 'deals', label: 'Deals', icon: Briefcase },
   { key: 'notes', label: 'Notes', icon: MessageSquare },
   { key: 'files', label: 'Files', icon: Paperclip },
@@ -43,9 +44,9 @@ export default function ContactDetailClient({
   activities,
   deals,
 }: {
-  contact: any
-  activities: any[]
-  deals: any[]
+  contact: Contact
+  activities: Activity[]
+  deals: Deal[]
 }) {
   const [activeTab, setActiveTab] = useState('activity')
   const containerRef = useRef<HTMLDivElement>(null)
@@ -200,7 +201,7 @@ export default function ContactDetailClient({
                   </Link>
                 </div>
               ) : (
-                deals.map((deal: any) => (
+                deals.map((deal) => (
                   <Link
                     key={deal.id}
                     href={`/deals/${deal.id}`}
