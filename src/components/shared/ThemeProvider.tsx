@@ -18,11 +18,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('dark')
   const [mounted, setMounted] = useState(false)
 
-  // Read saved theme on mount
+  // Read saved theme on mount. localStorage is unavailable during SSR, so this
+  // must run in an effect rather than a lazy useState initializer.
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as Theme | null
       if (saved === 'light' || saved === 'dark') {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing theme from localStorage on mount; cannot read storage during SSR
         setThemeState(saved)
         document.documentElement.setAttribute('data-theme', saved)
       } else {

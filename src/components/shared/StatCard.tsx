@@ -45,6 +45,8 @@ export default function StatCard({
   // Animated count-up
   useEffect(() => {
     if (hasAnimated || numericValue === undefined || !countRef.current) return
+    // One-shot guard: the count-up animation must run exactly once.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional run-once animation guard; refactoring would re-trigger the animation
     setHasAnimated(true)
 
     const target = numericValue
