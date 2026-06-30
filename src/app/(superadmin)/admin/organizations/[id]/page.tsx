@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -108,11 +108,7 @@ export default function OrgDetailPage() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    loadOrg()
-  }, [id])
-
-  async function loadOrg() {
+  const loadOrg = useCallback(async () => {
     const { data } = await supabase
       .from('organizations')
       .select('*')
@@ -145,7 +141,12 @@ export default function OrgDetailPage() {
     if (profiles) setUsers(profiles)
 
     setLoading(false)
-  }
+  }, [id, supabase])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount / id change; sets state once org loads
+    loadOrg()
+  }, [loadOrg])
 
   async function saveBranding() {
     setSaving(true)
@@ -638,19 +639,21 @@ function SitesTab({ orgId }: { orgId: string }) {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  useEffect(() => {
-    async function load() {
-      const { data } = await supabase
-        .from('sites')
-        .select('*')
-        .eq('organization_id', orgId)
-        .order('created_at', { ascending: false })
+  const loadSites = useCallback(async () => {
+    const { data } = await supabase
+      .from('sites')
+      .select('*')
+      .eq('organization_id', orgId)
+      .order('created_at', { ascending: false })
 
-      if (data) setSites(data as unknown as OrgSite[])
-      setLoading(false)
-    }
-    load()
-  }, [orgId])
+    if (data) setSites(data as unknown as OrgSite[])
+    setLoading(false)
+  }, [orgId, supabase])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount; sets state once sites load
+    loadSites()
+  }, [loadSites])
 
   if (loading) {
     return (
