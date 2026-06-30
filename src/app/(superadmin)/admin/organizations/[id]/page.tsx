@@ -46,6 +46,19 @@ interface Profile {
   last_sign_in_at: string | null
 }
 
+interface BrandingState {
+  primary_color: string
+  secondary_color: string
+  accent_color: string
+  display_font: string
+  body_font: string
+  logo_url: string
+  tagline: string
+  website: string
+  phone: string
+  email: string
+}
+
 interface OrgSite {
   id: string
   name: string
@@ -307,14 +320,14 @@ function BrandingTab({
   saveMessage,
   onSave,
 }: {
-  branding: Record<string, string>
-  setBranding: (b: Record<string, string>) => void
+  branding: BrandingState
+  setBranding: (b: BrandingState) => void
   orgName: string
   saving: boolean
   saveMessage: string
   onSave: () => void
 }) {
-  function update(key: string, value: string) {
+  function update(key: keyof BrandingState, value: string) {
     setBranding({ ...branding, [key]: value })
   }
 
