@@ -80,7 +80,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               <p className="text-sm py-4 text-center" style={{ color: 'var(--muted)' }}>No contacts linked</p>
             ) : (
               <div className="space-y-2">
-                {contacts.map((c: any) => (
+                {contacts.map((c) => (
                   <Link key={c.id} href={`/contacts/${c.id}`} className="flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--surface-2)] transition-colors">
                     <Avatar name={`${c.first_name} ${c.last_name}`} size="sm" />
                     <div>
@@ -99,7 +99,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               <p className="text-sm py-4 text-center" style={{ color: 'var(--muted)' }}>No deals yet</p>
             ) : (
               <div className="space-y-2">
-                {deals.map((deal: any) => (
+                {deals.map((deal) => (
                   <Link key={deal.id} href={`/deals/${deal.id}`} className="flex items-center justify-between p-3 rounded-lg hover:bg-[var(--surface-2)] transition-colors">
                     <div>
                       <p className="text-sm font-medium">{deal.title}</p>
