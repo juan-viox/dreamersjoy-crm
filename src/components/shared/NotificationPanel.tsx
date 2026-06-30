@@ -72,11 +72,12 @@ export default function NotificationPanel() {
       .order('created_at', { ascending: false })
       .limit(30)
 
-    if (data) setNotifications(data)
+    if (data) setNotifications(data as Notification[])
   }, [supabase])
 
   // Initial fetch
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount; sets state once notifications load
     fetchNotifications()
   }, [fetchNotifications])
 
