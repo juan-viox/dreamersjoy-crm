@@ -35,10 +35,6 @@ export default function AutomationsPage() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  useEffect(() => {
-    loadWorkflows()
-  }, [])
-
   async function loadWorkflows() {
     const { data } = await supabase
       .from('workflows')
@@ -48,6 +44,11 @@ export default function AutomationsPage() {
     setWorkflows(data ?? [])
     setLoading(false)
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount; sets state once workflows load
+    loadWorkflows()
+  }, [])
 
   async function toggleActive(id: string, currentState: boolean) {
     await supabase.from('workflows').update({ is_active: !currentState }).eq('id', id)

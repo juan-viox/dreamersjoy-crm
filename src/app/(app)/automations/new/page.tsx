@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import {
   ArrowLeft, Save, Loader2, Plus, Trash2, ChevronDown, ChevronUp,
-  Zap, Mail, Activity, Tag, Bell, Clock, ArrowRight, GripVertical,
+  Zap, Mail, Activity, Tag, Bell, Clock, ArrowRight,
 } from 'lucide-react'
 import type { WorkflowAction, WorkflowTrigger, WorkflowActionType, EmailTemplate, DealStage } from '@/types'
 
@@ -41,14 +41,10 @@ export default function NewWorkflowPage() {
 
   // Reference data
   const [templates, setTemplates] = useState<EmailTemplate[]>([])
-  const [stages, setStages] = useState<DealStage[]>([])
+  const [, setStages] = useState<DealStage[]>([])
 
   const supabase = createClient()
   const router = useRouter()
-
-  useEffect(() => {
-    loadData()
-  }, [])
 
   async function loadData() {
     const [templatesRes, stagesRes] = await Promise.all([
@@ -59,6 +55,11 @@ export default function NewWorkflowPage() {
     setTemplates(templatesRes.data ?? [])
     setStages(stagesRes.data ?? [])
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount; sets state once reference data loads
+    loadData()
+  }, [])
 
   function addAction(type: WorkflowActionType) {
     const newAction: WorkflowAction = {
@@ -488,7 +489,7 @@ export default function NewWorkflowPage() {
               </div>
             </div>
 
-            {actions.map((action, idx) => {
+            {actions.map((action) => {
               const actionType = ACTION_TYPES.find(a => a.value === action.type)
               if (!actionType) return null
               const Icon = actionType.icon
