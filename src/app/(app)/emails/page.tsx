@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { Mail, Plus, Send, FileEdit, Search, Trash2, Clock } from 'lucide-react'
+import { Mail, Send, FileEdit, Search, Clock } from 'lucide-react'
 import EmptyState from '@/components/shared/EmptyState'
 import type { EmailTemplate } from '@/types'
 
@@ -14,6 +14,7 @@ export default function EmailsPage() {
   const supabase = createClient()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability, react-hooks/set-state-in-effect -- mount data fetch; loadTemplates is defined below and sets state once loaded
     loadTemplates()
   }, [])
 

@@ -22,6 +22,28 @@ type SortDir = 'asc' | 'desc'
 
 const PAGE_SIZE = 20
 
+function SortIcon({
+  field,
+  sortField,
+  sortDir,
+}: {
+  field: SortField
+  sortField: SortField
+  sortDir: SortDir
+}) {
+  if (sortField !== field)
+    return (
+      <span className="inline-block w-3 h-3 ml-1 opacity-0 group-hover:opacity-30">
+        <ChevronUp className="w-3 h-3" />
+      </span>
+    )
+  return sortDir === 'asc' ? (
+    <ChevronUp className="w-3 h-3 inline ml-1" style={{ color: 'var(--accent-light)' }} />
+  ) : (
+    <ChevronDown className="w-3 h-3 inline ml-1" style={{ color: 'var(--accent-light)' }} />
+  )
+}
+
 export default function ContactTable({ contacts }: { contacts: Contact[] }) {
   const [search, setSearch] = useState('')
   const [sortField, setSortField] = useState<SortField>('created_at')
@@ -88,20 +110,6 @@ export default function ContactTable({ contacts }: { contacts: Contact[] }) {
     } else {
       setSelected(new Set(paginated.map((c) => c.id)))
     }
-  }
-
-  function SortIcon({ field }: { field: SortField }) {
-    if (sortField !== field)
-      return (
-        <span className="inline-block w-3 h-3 ml-1 opacity-0 group-hover:opacity-30">
-          <ChevronUp className="w-3 h-3" />
-        </span>
-      )
-    return sortDir === 'asc' ? (
-      <ChevronUp className="w-3 h-3 inline ml-1" style={{ color: 'var(--accent-light)' }} />
-    ) : (
-      <ChevronDown className="w-3 h-3 inline ml-1" style={{ color: 'var(--accent-light)' }} />
-    )
   }
 
   function exportCSV(contactsToExport: Contact[]) {
@@ -229,19 +237,19 @@ export default function ContactTable({ contacts }: { contacts: Contact[] }) {
                 className="sortable cursor-pointer select-none group"
                 onClick={() => toggleSort('first_name')}
               >
-                Name <SortIcon field="first_name" />
+                Name <SortIcon field="first_name" sortField={sortField} sortDir={sortDir} />
               </th>
               <th
                 className="sortable cursor-pointer select-none group"
                 onClick={() => toggleSort('email')}
               >
-                Email <SortIcon field="email" />
+                Email <SortIcon field="email" sortField={sortField} sortDir={sortDir} />
               </th>
               <th
                 className="sortable cursor-pointer select-none group"
                 onClick={() => toggleSort('company')}
               >
-                Company <SortIcon field="company" />
+                Company <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
               </th>
               <th>Phone</th>
               <th>Status</th>
