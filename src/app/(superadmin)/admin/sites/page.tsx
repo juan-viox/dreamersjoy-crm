@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  Globe,
   Search,
   Loader2,
   Copy,
@@ -24,6 +23,17 @@ interface SiteRow {
   created_at: string
 }
 
+interface SiteWithOrg {
+  id: string
+  name: string
+  domain: string | null
+  api_key: string | null
+  status: string | null
+  organization_id: string
+  created_at: string
+  organization?: { name: string | null } | null
+}
+
 export default function AdminSitesPage() {
   const [sites, setSites] = useState<SiteRow[]>([])
   const [loading, setLoading] = useState(true)
@@ -40,7 +50,7 @@ export default function AdminSitesPage() {
 
       if (data) {
         const withCounts = await Promise.all(
-          data.map(async (s: any) => {
+          (data as unknown as SiteWithOrg[]).map(async (s) => {
             const { count } = await supabase
               .from('site_ingestions')
               .select('id', { count: 'exact', head: true })
