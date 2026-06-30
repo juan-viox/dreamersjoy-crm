@@ -84,8 +84,8 @@ export async function POST(request: Request) {
       success: true,
       message: `Merged "${duplicate.first_name} ${duplicate.last_name}" into "${survivor.first_name} ${survivor.last_name}"`,
     })
-  } catch (err: any) {
+  } catch (err) {
     console.error('Merge error:', err)
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 })
   }
 }

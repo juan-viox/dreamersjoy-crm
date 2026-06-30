@@ -65,7 +65,7 @@ export async function POST(request: Request) {
         ? 'Email sent successfully'
         : 'Email logged as activity (no Resend API key configured)',
     })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 500 })
   }
 }
