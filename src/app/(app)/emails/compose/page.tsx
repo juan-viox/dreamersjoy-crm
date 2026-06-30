@@ -119,8 +119,8 @@ export default function ComposeEmailPage() {
 
       setSent(true)
       setTimeout(() => router.push('/emails'), 2000)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
     } finally {
       setSending(false)
     }

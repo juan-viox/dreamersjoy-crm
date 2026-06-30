@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { ArrowLeft, Plus, GripVertical, Trash2, Loader2, Save } from 'lucide-react'
-import type { DealStage } from '@/types'
+import { ArrowLeft, Plus, Trash2, Loader2, Save } from 'lucide-react'
 
 interface StageFormItem {
   id?: string
@@ -96,8 +95,8 @@ export default function PipelineSettingsPage() {
 
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
     }
     setLoading(false)
   }
