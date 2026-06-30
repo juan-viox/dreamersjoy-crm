@@ -46,6 +46,14 @@ interface Profile {
   last_sign_in_at: string | null
 }
 
+interface OrgSite {
+  id: string
+  name: string
+  domain: string | null
+  status: string | null
+  created_at: string
+}
+
 const tabs = [
   { id: 'overview', label: 'Overview', icon: Building2 },
   { id: 'branding', label: 'Branding', icon: Palette },
@@ -470,6 +478,7 @@ function BrandingTab({
             style={{ background: '#FFFFFF', border: `1px solid ${branding.accent_color}20` }}
           >
             {branding.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={branding.logo_url}
                 alt="Logo"
@@ -625,7 +634,7 @@ function UsersTab({ users }: { users: Profile[] }) {
 
 /* ---------- Sites Tab ---------- */
 function SitesTab({ orgId }: { orgId: string }) {
-  const [sites, setSites] = useState<any[]>([])
+  const [sites, setSites] = useState<OrgSite[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
@@ -637,7 +646,7 @@ function SitesTab({ orgId }: { orgId: string }) {
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
 
-      if (data) setSites(data)
+      if (data) setSites(data as unknown as OrgSite[])
       setLoading(false)
     }
     load()
