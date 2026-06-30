@@ -43,6 +43,7 @@ export default function AIProvidersPage() {
   const supabase = createClient()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability, react-hooks/set-state-in-effect -- mount load of saved keys; loadKeys is defined below and sets state once read
     loadKeys()
   }, [])
 

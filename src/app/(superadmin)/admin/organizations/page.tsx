@@ -4,12 +4,10 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import {
-  Building2,
   Plus,
   Eye,
   Palette,
   Users,
-  Ban,
   Loader2,
   Search,
 } from 'lucide-react'
@@ -37,6 +35,7 @@ export default function OrganizationsPage() {
   const supabase = createClient()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability, react-hooks/set-state-in-effect -- mount data fetch; loadOrgs is defined below and sets state once loaded
     loadOrgs()
   }, [])
 

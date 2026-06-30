@@ -71,6 +71,7 @@ export default function TeamPage() {
   const supabase = createClient()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability, react-hooks/set-state-in-effect -- mount data fetch; loadTeam is defined below and sets state once loaded
     loadTeam()
   }, [])
 
