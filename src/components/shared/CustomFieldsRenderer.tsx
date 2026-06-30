@@ -61,6 +61,7 @@ export default function CustomFieldsRenderer({
   }, [entityType, entityId, supabase])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async data fetch on mount; sets state once custom fields load
     fetchData()
   }, [fetchData])
 
