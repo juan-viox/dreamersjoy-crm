@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { ArrowLeft, Send, CheckCircle, XCircle, Loader2, Printer, FileDown, Mail } from 'lucide-react'
+import { ArrowLeft, Send, CheckCircle, XCircle, Loader2, FileDown, Mail } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Invoice, InvoiceItem } from '@/types'
 
@@ -22,7 +22,6 @@ export default function InvoiceDetailPage() {
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const params = useParams()
-  const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
@@ -178,8 +177,8 @@ export default function InvoiceDetailPage() {
             <p className="font-semibold">{invoice.contact.first_name} {invoice.contact.last_name}</p>
             {invoice.contact.email && <p className="text-sm" style={{ color: 'var(--muted)' }}>{invoice.contact.email}</p>}
             {invoice.contact.phone && <p className="text-sm" style={{ color: 'var(--muted)' }}>{invoice.contact.phone}</p>}
-            {(invoice.contact as any).company?.name && (
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>{(invoice.contact as any).company.name}</p>
+            {invoice.contact.company?.name && (
+              <p className="text-sm" style={{ color: 'var(--muted)' }}>{invoice.contact.company.name}</p>
             )}
           </div>
         )}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Menu, X, LogOut, LayoutDashboard, CalendarDays, Image, UserCircle } from 'lucide-react'
@@ -44,7 +45,7 @@ export default function PortalNav({ userName }: PortalNavProps) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/portal" className="flex items-center gap-3 no-underline">
+          <Link href="/portal" className="flex items-center gap-3 no-underline">
             <div
               className="flex items-center justify-center rounded-full"
               style={{
@@ -71,14 +72,14 @@ export default function PortalNav({ userName }: PortalNavProps) {
             >
               DreamersJoy
             </span>
-          </a>
+          </Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map(link => {
               const active = isActive(link.href)
               return (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   className="no-underline flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors"
@@ -92,7 +93,7 @@ export default function PortalNav({ userName }: PortalNavProps) {
                 >
                   <link.icon size={16} />
                   {link.label}
-                </a>
+                </Link>
               )
             })}
           </nav>
@@ -155,7 +156,7 @@ export default function PortalNav({ userName }: PortalNavProps) {
             {navLinks.map(link => {
               const active = isActive(link.href)
               return (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
@@ -169,7 +170,7 @@ export default function PortalNav({ userName }: PortalNavProps) {
                 >
                   <link.icon size={18} />
                   {link.label}
-                </a>
+                </Link>
               )
             })}
             <div style={{ borderTop: '1px solid #E8E0D8', margin: '0.5rem 0' }} />

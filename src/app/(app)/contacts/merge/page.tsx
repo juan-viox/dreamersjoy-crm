@@ -12,7 +12,6 @@ import {
   AlertTriangle,
   X,
   Users,
-  ChevronRight,
 } from 'lucide-react'
 import Avatar from '@/components/shared/Avatar'
 import type { Contact } from '@/types'
@@ -37,7 +36,7 @@ const MERGE_FIELDS = [
   { key: 'status', label: 'Status' },
   { key: 'company_id', label: 'Company' },
   { key: 'notes', label: 'Notes' },
-] as const
+] as const satisfies readonly { key: keyof Contact; label: string }[]
 
 export default function ContactMergePage() {
   const [scanning, setScanning] = useState(false)
@@ -129,8 +128,8 @@ export default function ContactMergePage() {
     // Default: prefer left for all fields
     const defaults: FieldSelection = {}
     MERGE_FIELDS.forEach((f) => {
-      const leftVal = (pair.left as any)[f.key]
-      const rightVal = (pair.right as any)[f.key]
+      const leftVal = pair.left[f.key]
+      const rightVal = pair.right[f.key]
       // Prefer whichever has a value, defaulting to left
       if (!leftVal && rightVal) defaults[f.key] = 'right'
       else defaults[f.key] = 'left'
@@ -143,7 +142,6 @@ export default function ContactMergePage() {
     if (!activePair) return
     setMerging(true)
 
-    const survivorSide = 'left' // Survivor is always left contact
     const survivorId = activePair.left.id
     const duplicateId = activePair.right.id
 
@@ -152,7 +150,7 @@ export default function ContactMergePage() {
     MERGE_FIELDS.forEach((f) => {
       const side = selections[f.key] || 'left'
       const source = side === 'left' ? activePair.left : activePair.right
-      const val = (source as any)[f.key]
+      const val = source[f.key]
       if (val !== undefined) selectedFields[f.key] = val
     })
 
@@ -182,7 +180,7 @@ export default function ContactMergePage() {
       } else {
         alert(data.error || 'Merge failed')
       }
-    } catch (err) {
+    } catch {
       alert('Network error during merge')
     } finally {
       setMerging(false)
@@ -357,8 +355,8 @@ export default function ContactMergePage() {
 
             {/* Field rows */}
             {MERGE_FIELDS.map((field) => {
-              const leftVal = String((activePair.left as any)[field.key] ?? '')
-              const rightVal = String((activePair.right as any)[field.key] ?? '')
+              const leftVal = String(activePair.left[field.key] ?? '')
+              const rightVal = String(activePair.right[field.key] ?? '')
               const selected = selections[field.key] || 'left'
 
               return (
