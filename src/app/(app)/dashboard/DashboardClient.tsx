@@ -223,7 +223,7 @@ export default function DashboardClient({
                   color: 'var(--text)',
                   boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
                 }}
-                formatter={(value: number) => [
+                formatter={(value) => [
                   `$${Number(value).toLocaleString()}`,
                   'Revenue',
                 ]}

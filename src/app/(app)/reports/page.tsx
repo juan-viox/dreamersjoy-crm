@@ -54,7 +54,7 @@ export default async function ReportsPage() {
       stages={stagesRes.data ?? []}
       teamMembers={(profilesRes.data ?? []).map((p) => ({
         id: p.id,
-        name: p.full_name,
+        name: p.full_name ?? '',
       }))}
       topCompanies={(companies ?? []).map((c) => ({
         name: c.name,
